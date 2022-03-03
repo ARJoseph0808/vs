@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="ThemeBucket">
+    <link rel="shortcut icon" href="#" type="image/png">
+
+    <title>病人列表</title>
+
+    <!--dynamic table-->
+    <link href="js/advanced-datatable/css/demo_page.css" rel="stylesheet"/>
+    <link href="js/advanced-datatable/css/demo_table.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="js/data-tables/DT_bootstrap.css"/>
+
+    <div th:include="~{common :: commonheader}"></div>
+</head>
+
+<body class="sticky-header">
+
+<section>
+    <!-- left side start-->
+    <div th:replace="common :: #leftmenu"></div>
+    <!-- left side end-->
+
+    <!-- main content start-->
+    <div class="main-content">
+
+        <!-- header section start-->
+        <div th:replace="common :: headermenu"></div>
+        <!-- header section end-->
+
+        <!-- page heading start-->
+        <div class="page-heading">
+            <h3>
+                病人列表
+            </h3>
+            <ul class="breadcrumb">
+                <li>
+                    <a href="#">病人管理</a>
+                </li>
+                <li class="active"> 病人列表</li>
+            </ul>
+        </div>
+        <!-- page heading end-->
+
+        <!--body wrapper start-->
+        <div class="wrapper">
+            <div class="row">
+                <div class="col-sm-12">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            病人列表
+                            <span class="tools pull-right">
+                <a href="javascript:;" class="fa fa-chevron-down"></a>
+                <a href="javascript:;" class="fa fa-times"></a>
+             </span>
+                        </header>
+                        <div class="panel-body" >
+                            <h2><a class="btn btn-sm btn-success" th:href="@{/patient_add}">添加病人</a></h2>
+                            <div class="adv-table">
+                                <table class="display table table-bordered table-striped" id="dynamic-table">
+                                    <thead>
+                                    <tr>
+                                        <th>id</th>
+                                        <th>name</th>
+                                        <th>age</th>
+                                        <th>sex</th>
+                                        <th>采集数据</th>
+                                        <th>分析数据</th>
+                                        <th>操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr class="gradeX odd" th:each="patient: ${patients.records}">
+                                        <td th:text="${patient.id}"></td>
+                                        <td>[[${patient.name}]]</td>
+                                        <td th:text="${patient.age}">Win 95+</td>
+                                        <td th:text="${patient.sex == 0?'女':'男'}">4</td>
+                                        <td><a th:href="@{/txt/{path}(path=${patient.collectdatapath})}" th:download="${patient.collectdatapath}">[[${patient.collectdatapath}]]</a></td>
+                                        <td><a th:href="@{/txt/{path}(path=${patient.analysisdatapath})}" th:download="${patient.analysisdatapath}">[[${patient.analysisdatapath}]]</a></td>
+                                        <td>
+                                            <a th:href="@{/patient/update/{id}(id=${patient.id})}" th:each="role: ${session.loginUser.role}" th:class="${role > 0?'btn btn-danger btn-sm':'hidden'}"
+                                               class="btn btn-danger btn-sm" type="button">编辑</a>
+                                            <a th:href="@{/patient/delete/{id}(id=${patient.id},pn=${patients.current})}"
+                                               class="btn btn-danger btn-sm" type="button">删除</a>
+                                            <a th:href="@{/patient/echarts/{id}(id=${patient.id})}"
+                                               class="btn btn-danger btn-sm" type="button">可视化</a>
+                                        </td>
+                                    </tr>
+
+                                    </tbody>
+                                    <tfoot>
+
+                                    </tfoot>
+                                </table>
+                                <div class="row-fluid">
+                                    <div class="span6">
+                                        <div class="dataTables_info" id="dynamic-table_info">
+                                            当前第[[${patients.current}]]页 总计 [[${patients.pages}]]页
+                                            共[[${patients.total}]]条记录
+                                        </div>
+                                    </div>
+                                    <div class="span6">
+                                        <div class="dataTables_paginate paging_bootstrap pagination">
+                                            <ul>
+                                                <li th:class="|prev ${patients.current == 1 ? 'disabled ':''}|"><a th:href="@{/patient_table(pn=${patients.current - 1})}">← 前一页</a></li>
+                                                <li th:class="${num == patients.current?'active':''}"
+                                                    th:each="num:${#numbers.sequence(1,patients.pages)}">
+                                                    <a th:href="@{/patient_table(pn=${num})}">[[${num}]]</a>
+                                                </li>
+                                                <li th:class="|next ${patients.current == patients.pages ? 'disabled':''}|"><a th:href="@{/patient_table(pn=${patients.current + 1})}">下一页 → </a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!--body wrapper end-->
+
+            <!--footer section start-->
+            <footer>
+                2021 &copy; VisualizationSystem by Joseph
+            </footer>
+            <!--footer section end-->
+
+
+        </div>
+        <!-- main content end-->
+    </div>
+</section>
+
+<!-- Placed js at the end of the document so the pages load faster -->
+<div th:replace="common :: #commonscript"></div>
+
+<!--dynamic table-->
+<script type="text/javascript" language="javascript" src="js/advanced-datatable/js/jquery.dataTables.js"></script>
+<script type="text/javascript" src="js/data-tables/DT_bootstrap.js"></script>
+<!--dynamic table initialization -->
+<!--<script src="js/dynamic_table_init.js"></script>-->
+
+<!--common scripts for all pages-->
+
+
+</body>
+</html>

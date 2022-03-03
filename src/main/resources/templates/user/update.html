@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="ThemeBucket">
+  <link rel="shortcut icon" href="#" type="image/png">
+
+  <title>修改信息</title>
+
+    <div th:include="common :: commonheader"></div>
+</head>
+
+<body class="sticky-header">
+
+<section>
+    <!-- left side start-->
+    <div th:replace="common :: #leftmenu"></div>
+    <!-- left side end-->
+    
+    <!-- main content start-->
+    <div class="main-content" >
+
+        <!-- header section start-->
+        <div th:replace="common :: headermenu"></div>
+        <!-- header section end-->
+
+        <!-- page heading start-->
+        <div class="page-heading">
+            <h3>
+                修改信息
+            </h3>
+            <ul class="breadcrumb">
+                <li>
+                    <a href="#">用户管理</a>
+                </li>
+                <li class="active"> 修改信息 </li>
+            </ul>
+        </div>
+        <!-- page heading end-->
+
+        <!--body wrapper start-->
+        <section class="wrapper">
+        <!-- page start-->
+
+        <div class="row">
+            <div class="col-sm-12">
+                <section class="panel">
+                    <header class="panel-heading">
+                        修改信息
+                    </header>
+                    <div class="panel-body">
+                        <form role="form" th:action="@{/updateuser}" method="post" enctype="multipart/form-data">
+                            <input type="hidden" th:value="${updateuser.getId()}" name="id" >
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">用户名字</label>
+                                <input th:value="${updateuser.getName()}" type="text" name="name" class="form-control" id="exampleInputEmail1" placeholder="请输入姓名">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">用户密码</label>
+                                <input th:value="${updateuser.getPassword()}" type="text" name="password" class="form-control" id="exampleInputPassword1" placeholder="请输入密码">
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label col-lg-2" for="inputSuccess">权限</label>
+                                <div class="col-lg-10" th:each="role: ${session.loginUser.role}">
+
+                                    <div class="radio" th:class="${role > 1?'radio':'hidden'}">
+                                        <label>
+                                            <input th:checked="${updateuser.getRole() == 2}" type="radio" name="role" id="optionsRadios1" value="2" checked>
+                                            超级管理员
+                                        </label>
+                                    </div>
+                                    <div class="radio" th:class="${role > 1?'radio':'hidden'}">
+                                        <label>
+                                            <input th:checked="${updateuser.getRole() == 1}" type="radio" name="role" id="optionsRadios2" value="1" checked>
+                                            管理员
+                                        </label>
+                                    </div>
+                                    <div class="radio" th:class="${role > 0?'radio':'hidden'}">
+                                        <label>
+                                            <input th:checked="${updateuser.getRole() == 0}" type="radio" name="role" id="optionsRadios3" value="0">
+                                            普通用户
+                                        </label>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">提交</button>
+                        </form>
+
+                    </div>
+                </section>
+            </div>
+        </div>
+        <!-- page end-->
+        </section>
+        <!--body wrapper end-->
+
+        <!--footer section start-->
+        <footer>
+            2021 &copy; VisualizationSystem by Joseph
+        </footer>
+        <!--footer section end-->
+
+
+    </div>
+    <!-- main content end-->
+</section>
+
+<!-- Placed js at the end of the document so the pages load faster -->
+<div th:replace="common :: #commonscript"></div>
+
+</body>
+</html>

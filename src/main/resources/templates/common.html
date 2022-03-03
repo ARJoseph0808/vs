@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="commonheader">
+
+    <!--common-->
+    <link href="css/style.css" th:href="@{/css/style.css}" rel="stylesheet">
+    <link href="css/style-responsive.css" th:href="@{/css/style-responsive.css}" rel="stylesheet">
+
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js" th:src="@{/js/html5shiv.js}"></script>
+    <script src="js/respond.min.js" th:src="@{/js/respond.min.js}"></script>
+    <![endif]-->
+</head>
+<body>
+
+<!-- left side start-->
+<div id="leftmenu" class="left-side sticky-left-side">
+
+    <!--网站logo 大 和 小-->
+    <div class="logo">
+        <a th:href="@{/main.html}"><img src="/images/Logoo3.png" alt=""></a>
+    </div>
+
+    <!-- 隐藏侧边栏时显示logo -->
+    <div class="logo-icon text-center">
+        <a th:href="@{/main.html}"><img src="/images/logo_icon1.png" alt=""></a>
+    </div>
+    <!--网站logo 大 和 小-->
+
+    <div class="left-side-inner">
+
+
+
+        <!--侧边栏导航开始-->
+        <ul class="nav nav-pills nav-stacked custom-nav">
+
+
+
+
+<!--            <li class="menu-list nav-active"><a href="#"><i class="fa fa-th-list"></i> <span>病人管理</span></a>-->
+<!--                <ul class="sub-menu-list">-->
+<!--                    <li><a th:href="@{/form_layouts}">新增病人</a></li>-->
+<!--                    <li><a th:href="@{/patient_table}">病人列表</a> </li>-->
+<!--                </ul>-->
+<!--            </li>-->
+            <li class="menu-list nav-active"><a href="#"><i class="fa fa-th-list"></i> <span>病人管理</span></a>
+                <ul class="sub-menu-list">
+                    <li><a th:href="@{/patient_add}">新增病人</a></li>
+                    <li><a th:href="@{/patient_table}">病人列表</a> </li>
+                </ul>
+            </li>
+            <li class="menu-list nav-active" th:each="role: ${session.loginUser.role}" th:class="${role > 0?'menu-list nav-active':'hidden'}"><a href="#"><i class="fa fa-th-list"></i> <span>用户管理</span></a>
+                <ul class="sub-menu-list">
+                    <li><a th:href="@{/user_add}">新增用户</a></li>
+                    <li><a th:href="@{/user_table}">用户列表</a> </li>
+                </ul>
+            </li>
+
+
+
+        </ul>
+        <!--侧边栏导航结束-->
+
+    </div>
+</div>
+<!-- left side end-->
+
+<!-- header section start-->
+<div th:fragment="headermenu" class="header-section">
+
+    <!--开关按钮开始-->
+    <a class="toggle-btn"><i class="fa fa-bars"></i></a>
+    <!--开关按钮结束-->
+
+
+
+    <!--通知菜单开始 -->
+    <div class="menu-right">
+        <ul class="notification-menu">
+            <li>
+                <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+<!--                    <img src="images/photos/user-avatar.png" alt="" />-->
+                    [[${session.loginUser.name}]]
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-usermenu pull-right">
+                    <li><a th:href="@{/}"><i class="fa fa-sign-out"></i> 登出</a></li>
+                    <li><a th:href="@{/user/changepassword/{id}(id=${session.loginUser.id})}"><i class="fa fa-sign-out"></i>修改密码</a></li>
+                </ul>
+            </li>
+
+        </ul>
+    </div>
+    <!--通知菜单结束 -->
+
+</div>
+<!-- header section end-->
+
+
+<div id="commonscript">
+    <!-- Placed js at the end of the document so the pages load faster -->
+    <script th:src="@{/js/jquery-1.10.2.min.js}"></script>
+    <script th:src="@{/js/jquery-ui-1.9.2.custom.min.js}"></script>
+    <script th:src="@{/js/jquery-migrate-1.2.1.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/modernizr.min.js}"></script>
+    <script th:src="@{/js/jquery.nicescroll.js}"></script>
+    <!--common scripts for all pages-->
+    <script th:src="@{/js/scripts.js}"></script>
+</div>
+
+</body>
+</html>
