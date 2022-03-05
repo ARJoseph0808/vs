@@ -33,6 +33,19 @@
             <label style="color: red" th:text="${msg}"></label>
             <input type="text" name="name" class="form-control" placeholder="用户名" autofocus>
             <input type="password" name="password" class="form-control" placeholder="密码">
+            <div class="form-group row mt-4">
+                <div class="col-sm-6">
+                    <input type="text" th:class="|form-control ${codeMsg!=null?'is-invalid':''}|"
+                           id="verifycode" name="code" placeholder="请输入验证码!">
+                    <div class="invalid-feedback" th:text="${codeMsg}">
+                        验证码不正确!
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <img th:src="@{/kaptcha}" id="kaptcha" style="width:100px;height:40px;" class="mr-2"/>
+                    <a href="javascript:refresh_kaptcha();" class="font-size-12 align-bottom">刷新验证码</a>
+                </div>
+            </div>
 
 <!--            <div class="registration">-->
 <!--                还没有账号?-->
@@ -62,6 +75,12 @@
 <script src="js/jquery-1.10.2.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/modernizr.min.js"></script>
+<script>
+    function refresh_kaptcha() {
+        var path = "/kaptcha?p=" + Math.random();
+        $("#kaptcha").attr("src", path);
+    }
+</script>
 
 </body>
 </html>
