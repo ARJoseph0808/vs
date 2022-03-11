@@ -40,62 +40,56 @@
                 <li>
                     <a href="#">病人管理</a>
                 </li>
-                <li class="active"> 病人详情</li>
+                <li class="active"> 病人列表</li>
             </ul>
         </div>
         <!-- page heading end-->
-        <div class="wrapper">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="panel">
-                        <div class="panel-body">
-                            <div class="profile-desk">
-                                <h2 th:text="|病人姓名:${session.info.name}|"></h2>
-                                <span class="designation" th:text="|性别:${session.info.sex == 0?'女':'男'} 年龄:${session.info.age}|"></span>
-                                <p th:text="|过往病史:${session.info.getMedicalhistory()}|"></p>
-                                <p th:text="|诊断结果:${session.info.getDiagnosis()}|"></p>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
         <!--body wrapper start-->
         <div class="wrapper">
             <div class="row">
                 <div class="col-sm-12">
                     <section class="panel">
-                        <header class="panel-heading" >
+                        <header class="panel-heading">
+                            病人列表
                             <span class="tools pull-right">
                 <a href="javascript:;" class="fa fa-chevron-down"></a>
                 <a href="javascript:;" class="fa fa-times"></a>
              </span>
                         </header>
-                        <div class="panel-body">
-                            <h2><a class="btn btn-sm btn-success" th:href="@{/patient_add}">添加检测</a><a class="btn btn-sm btn-success" th:href="@{/patient_info/update/{id}(id=${session.info.id})}">修改诊断</a></h2>
+                        <div class="panel-body" >
+                            <h2><a class="btn btn-sm btn-success" th:href="@{/patient_info_add}">添加病人</a></h2>
+
                             <div class="adv-table">
                                 <table class="display table table-bordered table-striped" id="dynamic-table">
+                                    <form class="form-signin" action="index.html" method="post" th:action="@{/patient_info_search}">
+                                        <div class="input-group col-md-3" style="margin-top:0px positon:relative">
+                                            <input type="text" class="form-control"placeholder="请输入病人姓名" name = "searchname">
+                                            <span class="input-group-btn">
+                                            <button class="btn btn-info btn-search" type="submit">查找</button>
+                                          </span>
+                                        </div>
+                                    </form>
                                     <thead>
                                     <tr>
-                                        <th>采集数据</th>
-                                        <th>分析数据</th>
-                                        <th>采集时间</th>
+                                        <th>姓名</th>
+                                        <th>年龄</th>
+                                        <th>性别</th>
                                         <th>操作</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr class="gradeX odd" th:each="patient: ${patients.records}">
-                                        <td><a th:href="@{/txt/{path}(path=${patient.collectdatapath})}" th:download="${patient.collectdatapath}">[[${patient.collectdatapath}]]</a></td>
-                                        <td><a th:href="@{/txt/{path}(path=${patient.analysisdatapath})}" th:download="${patient.analysisdatapath}">[[${patient.analysisdatapath}]]</a></td>
-                                        <td th:text="${patient.createtime}">Win 95+</td>
+                                    <tr class="gradeX odd" th:each="info: ${infos.records}">
+                                        <td>[[${info.name}]]</td>
+                                        <td th:text="${info.age}">Win 95+</td>
+                                        <td th:text="${info.sex == 0?'女':'男'}">4</td>
                                         <td>
-                                            <a th:href="@{/patient/update/{id}(id=${patient.id})}" th:each="role: ${session.loginUser.role}" th:class="${role > 0?'btn btn-danger btn-sm':'hidden'}"
+                                            <a th:href="@{/patient_info/update/{id}(id=${info.id})}" th:each="role: ${session.loginUser.role}" th:class="${role > 0?'btn btn-danger btn-sm':'hidden'}"
                                                class="btn btn-danger btn-sm" type="button">编辑</a>
-                                            <a th:href="@{/patient/delete/{id}(id=${patient.id})}"
+                                            <a th:href="@{/patient_table(id=${info.id})}" th:each="role: ${session.loginUser.role}" th:class="${role > 0?'btn btn-danger btn-sm':'hidden'}"
+                                               class="btn btn-danger btn-sm" type="button">详情</a>
+                                            <a th:href="@{/patient_info_delete/{id}(id=${info.id})}"
                                                class="btn btn-danger btn-sm" type="button">删除</a>
-                                            <a th:href="@{/patient/echarts/{id}(id=${patient.id})}"
-                                               class="btn btn-danger btn-sm" type="button">可视化</a>
                                         </td>
                                     </tr>
 
@@ -107,19 +101,19 @@
                                 <div class="row-fluid">
                                     <div class="span6">
                                         <div class="dataTables_info" id="dynamic-table_info">
-                                            当前第[[${patients.current}]]页 总计 [[${patients.pages}]]页
-                                            共[[${patients.total}]]条记录
+                                            当前第[[${infos.current}]]页 总计 [[${infos.pages}]]页
+                                            共[[${infos.total}]]条记录
                                         </div>
                                     </div>
                                     <div class="span6">
                                         <div class="dataTables_paginate paging_bootstrap pagination">
                                             <ul>
-                                                <li th:class="|prev ${patients.current == 1 ? 'disabled ':''}|"><a th:href="@{/patient_table/(id=${session.info.id},pn=${patients.current - 1})}">← 前一页</a></li>
-                                                <li th:class="${num == patients.current?'active':''}"
-                                                    th:each="num:${#numbers.sequence(1,patients.pages == 0 ? 1 : patients.pages)}">
-                                                    <a th:href="@{/patient_table(id=${session.info.id},pn=${num})}">[[${num}]]</a>
+                                                <li th:class="|prev ${infos.current == 1 ? 'disabled ':''}|"><a th:href="@{/patient_info_table(pn=${infos.current - 1})}">← 前一页</a></li>
+                                                <li th:class="${num == infos.current?'active':''}"
+                                                    th:each="num:${#numbers.sequence(1,infos.pages == 0 ? 1 : infos.pages)}">
+                                                    <a th:href="@{/patient_info_table(pn=${num})}">[[${num}]]</a>
                                                 </li>
-                                                <li th:class="|next ${patients.current == patients.pages ? 'disabled':''}|"><a th:href="@{/patient_table/(id=${session.info.id},pn=${patients.current + 1})}">下一页 → </a></li>
+                                                <li th:class="|next ${infos.current == infos.pages ? 'disabled':''}|"><a th:href="@{/patient_info_table(pn=${infos.current + 1})}">下一页 → </a></li>
                                             </ul>
                                         </div>
                                     </div>

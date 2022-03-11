@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="ThemeBucket">
+  <link rel="shortcut icon" href="#" type="image/png">
+
+  <title>修改信息</title>
+
+    <div th:include="common :: commonheader"></div>
+</head>
+
+<body class="sticky-header">
+
+<section>
+    <!-- left side start-->
+    <div th:replace="common :: #leftmenu"></div>
+    <!-- left side end-->
+    
+    <!-- main content start-->
+    <div class="main-content" >
+
+        <!-- header section start-->
+        <div th:replace="common :: headermenu"></div>
+        <!-- header section end-->
+
+        <!-- page heading start-->
+        <div class="page-heading">
+            <h3>
+                修改信息
+            </h3>
+            <ul class="breadcrumb">
+                <li>
+                    <a href="#">病人管理</a>
+                </li>
+                <li class="active"> 修改信息 </li>
+            </ul>
+        </div>
+        <!-- page heading end-->
+
+        <!--body wrapper start-->
+        <section class="wrapper">
+        <!-- page start-->
+
+        <div class="row">
+            <div class="col-sm-12">
+                <section class="panel">
+                    <header class="panel-heading">
+                        修改信息
+                    </header>
+                    <div class="panel-body">
+                        <form role="form" th:action="@{/updateinfo}" method="post" enctype="multipart/form-data">
+                            <input type="hidden" th:value="${updatepatientinfo.getId()}" name="id" >
+                            <div class="form-group">
+                                <label for="exampleInputName1">病人名字</label>
+                                <input th:value="${updatepatientinfo.getName()}" type="text" name="name" class="form-control" id="exampleInputName1" placeholder="请输入姓名">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputAge1">年龄</label>
+                                <input th:value="${updatepatientinfo.getAge()}" type="text" name="age" class="form-control" id="exampleInputAge1" placeholder="请输入年龄">
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label col-lg-2" for="inputSuccess">性别</label>
+                                <div class="col-lg-10">
+
+                                    <div class="radio">
+                                        <label>
+                                            <input th:checked="${updatepatientinfo.getSex() == 1}" type="radio" name="sex" id="optionsRadios1" value="1" checked>
+                                            男
+                                        </label>
+                                    </div>
+                                    <div class="radio">
+                                        <label>
+                                            <input th:checked="${updatepatientinfo.getSex() == 0}" type="radio" name="sex" id="optionsRadios2" value="0">
+                                            女
+                                        </label>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputMedicalhistory1">过往病史</label>
+                                <input th:value="${updatepatientinfo.getMedicalhistory()}" type="text" name="medicalhistory" class="form-control" id="exampleInputMedicalhistory1" placeholder="请输入姓名">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputDiagnosis1">诊断</label>
+                                <input th:value="${updatepatientinfo.getDiagnosis()}" type="text" name="diagnosis" class="form-control" id="exampleInputDiagnosis1" placeholder="请输入姓名">
+                            </div>
+                            <button type="submit" class="btn btn-primary">提交</button>
+                        </form>
+
+                    </div>
+                </section>
+            </div>
+        </div>
+        <!-- page end-->
+        </section>
+        <!--body wrapper end-->
+
+        <!--footer section start-->
+        <footer>
+            2021 &copy; VisualizationSystem by Joseph
+        </footer>
+        <!--footer section end-->
+
+
+    </div>
+    <!-- main content end-->
+</section>
+
+<!-- Placed js at the end of the document so the pages load faster -->
+<div th:replace="common :: #commonscript"></div>
+
+</body>
+</html>

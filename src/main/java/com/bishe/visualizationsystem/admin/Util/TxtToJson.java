@@ -1,4 +1,4 @@
-package com.bishe.visualizationsystem.admin.test;
+package com.bishe.visualizationsystem.admin.Util;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -11,14 +11,13 @@ import java.util.List;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.bishe.visualizationsystem.admin.bean.Wave;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.context.annotation.Bean;
 
 /**
  * @author Joseph
  * @date 2022/1/3
  * @apiNote
  */
-
 
 
 public class TxtToJson {

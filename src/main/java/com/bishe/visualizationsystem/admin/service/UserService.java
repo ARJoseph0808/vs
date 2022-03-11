@@ -1,7 +1,7 @@
 package com.bishe.visualizationsystem.admin.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.bishe.visualizationsystem.admin.bean.Users;
+import com.bishe.visualizationsystem.admin.bean.User;
 import org.springframework.stereotype.Service;
 
 /**
@@ -10,5 +10,5 @@ import org.springframework.stereotype.Service;
  * @apiNote
  */
 @Service
-public interface UsersService extends IService<Users> {
+public interface UserService extends IService<User> {
 }

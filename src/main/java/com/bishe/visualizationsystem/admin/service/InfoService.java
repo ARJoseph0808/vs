@@ -1,18 +1,14 @@
 package com.bishe.visualizationsystem.admin.service;
 
-
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.bishe.visualizationsystem.admin.bean.Patient;
+import com.bishe.visualizationsystem.admin.bean.Info;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * @author Joseph
- * @date 2021/12/29
+ * @date 2021/12/25
  * @apiNote
  */
 @Service
-public interface PatientService extends IService<Patient> {
-
+public interface InfoService extends IService<Info> {
 }

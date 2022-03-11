@@ -9,20 +9,21 @@ import lombok.NoArgsConstructor;
 
 /**
  * @author Joseph
- * @date 2021/12/29
+ * @date 2022/3/11
  * @apiNote
  */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@TableName("patient")
-public class Patient {
-
+@TableName("info")
+public class Info {
     @TableId(type = IdType.AUTO)
     private Long id;
+
     private String name;
-    private String collectdatapath;
-    private String analysisdatapath;
-    private String createtime;
+    private Integer age;
+    private Integer sex;
+    private String medicalhistory;
+    private String diagnosis;
 
 }

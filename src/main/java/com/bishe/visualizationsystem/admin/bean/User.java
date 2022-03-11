@@ -17,8 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@TableName("users")
-public class Users {
+@TableName("user")
+public class User {
     /**
      * 所有属性都应该在数据库中
      */

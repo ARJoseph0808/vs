@@ -1,7 +1,9 @@
 package com.bishe.visualizationsystem.admin.controller;
-import com.bishe.visualizationsystem.admin.bean.Users;
-import com.bishe.visualizationsystem.admin.mapper.UsersMapper;
+
+import com.bishe.visualizationsystem.admin.bean.User;
+import com.bishe.visualizationsystem.admin.mapper.UserMapper;
 import com.google.code.kaptcha.Producer;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
@@ -30,7 +31,7 @@ import java.util.Map;
 public class IndexController {
 
     @Autowired
-    UsersMapper usersMapper;
+    UserMapper userMapper;
 
     @Autowired
     private Producer kaptchaProducer;
@@ -46,7 +47,7 @@ public class IndexController {
     }
 
     @PostMapping(value = {"/login"})
-    public String main(Users user, String code,HttpSession session, Model model){
+    public String main(User user, String code,HttpSession session, Model model){
 
         // 检查验证码
         String kaptcha = (String) session.getAttribute("kaptcha");
@@ -58,13 +59,13 @@ public class IndexController {
         Map<String, Object> map = new HashMap<>();
         if(!StringUtils.isEmpty(user.getName())){
             map.put("name",user.getName());
-            List<Users> users = usersMapper.selectByMap(map);
+            List<User> users = userMapper.selectByMap(map);
             if(users.isEmpty()){
                 model.addAttribute("msg","账号错误");
                 //回到登录页
                 return "login";
             }
-            Users u = users.get(0);
+            User u = users.get(0);
             if(u.getPassword().equals(user.getPassword())){
                 session.setAttribute("loginUser",u);
 

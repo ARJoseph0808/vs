@@ -47,8 +47,8 @@
 <!--            </li>-->
             <li class="menu-list nav-active"><a href="#"><i class="fa fa-th-list"></i> <span>病人管理</span></a>
                 <ul class="sub-menu-list">
-                    <li><a th:href="@{/patient_add}">新增病人</a></li>
-                    <li><a th:href="@{/patient_table}">病人列表</a> </li>
+                    <li><a th:href="@{/patient_info_add}">新增病人</a></li>
+                    <li><a th:href="@{/patient_info_table}">病人列表</a> </li>
                 </ul>
             </li>
             <li class="menu-list nav-active" th:each="role: ${session.loginUser.role}" th:class="${role > 0?'menu-list nav-active':'hidden'}"><a href="#"><i class="fa fa-th-list"></i> <span>用户管理</span></a>

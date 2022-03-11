@@ -29,13 +29,11 @@
         <!-- page heading start-->
         <div class="page-heading">
             <h3>
-                新增病人
+                新增采集
             </h3>
             <ul class="breadcrumb">
-                <li>
-                    <a href="#">病人管理</a>
-                </li>
-                <li class="active"> 新增病人 </li>
+
+                <li class="active"> 新增采集 </li>
             </ul>
         </div>
         <!-- page heading end-->
@@ -52,34 +50,10 @@
                     </header>
                     <div class="panel-body">
                         <form role="form" th:action="@{/patient_upload}" method="post" enctype="multipart/form-data">
-                            <div class="form-group">
+                            <div class="form-group hidden" >
                                 <label for="exampleInputEmail1">病人名字</label>
-                                <input type="text" name="name" class="form-control" id="exampleInputEmail1" placeholder="请输入姓名">
+                                <input type="text" name="name" class="form-control" id="exampleInputEmail1" placeholder="请输入姓名" th:value="${session.info.name}" >
                             </div>
-                            <div class="form-group">
-                                <label for="exampleInputPassword1">年龄</label>
-                                <input type="text" name="age" class="form-control" id="exampleInputPassword1" placeholder="请输入年龄">
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label col-lg-2" for="inputSuccess">性别</label>
-                                <div class="col-lg-10">
-
-                                    <div class="radio">
-                                        <label>
-                                            <input type="radio" name="sex" id="optionsRadios1" value="1" checked>
-                                            男
-                                        </label>
-                                    </div>
-                                    <div class="radio">
-                                        <label>
-                                            <input type="radio" name="sex" id="optionsRadios2" value="0">
-                                            女
-                                        </label>
-                                    </div>
-
-                                </div>
-                            </div>
-
                             <div class="form-group">
                                 <font color="#FF0000">请使用本地程序采集数据</font>
                                 <br>
