@@ -11,8 +11,9 @@
  Target Server Version : 80026
  File Encoding         : 65001
 
- Date: 08/04/2022 20:48:10
+ Date: 08/04/2022 21:08:12
 */
+
 
 
 -- ----------------------------
@@ -21,7 +22,7 @@
 DROP TABLE IF EXISTS `info`;
 CREATE TABLE `info`  (
   `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT DEFAULT NULL COMMENT '姓名',
+  `name` varchar(255) NOT NULL COMMENT '姓名',
   `age` int NULL DEFAULT NULL COMMENT '年龄',
   `sex` int NULL DEFAULT NULL COMMENT '性别',
   `medicalhistory` varchar(255) NULL DEFAULT NULL COMMENT '过往病史',
