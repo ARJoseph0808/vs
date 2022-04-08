@@ -22,7 +22,7 @@ public class KaptchaConfig {
         //文字颜色 黑色
         properties.setProperty("kaptcha.textproducer.font.color", "0,0,0");
         //文字类型
-        properties.setProperty("kaptcha.textproducer.char.string", "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYAZ");
+        properties.setProperty("kaptcha.textproducer.char.string", "23456789ABCDEFGHJKLMNPQRSTUVWXYAZ");
         //验证码长度
         properties.setProperty("kaptcha.textproducer.char.length", "4");
         //噪声设置 无噪声

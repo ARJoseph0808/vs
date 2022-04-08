@@ -7,7 +7,11 @@ import com.bishe.visualizationsystem.admin.bean.Info;
 import com.bishe.visualizationsystem.admin.bean.Patient;
 import com.bishe.visualizationsystem.admin.bean.User;
 import com.bishe.visualizationsystem.admin.mapper.InfoMapper;
+import com.bishe.visualizationsystem.admin.mapper.PatientMapper;
+import com.bishe.visualizationsystem.admin.mapper.UserMapper;
 import com.bishe.visualizationsystem.admin.service.InfoService;
+import com.bishe.visualizationsystem.admin.service.PatientService;
+import com.bishe.visualizationsystem.admin.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +25,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author Joseph
@@ -33,6 +38,14 @@ public class InfoController {
     InfoService infoService;
     @Autowired
     InfoMapper infoMapper;
+    @Autowired
+    UserMapper userMapper;
+    @Autowired
+    UserService userService;
+    @Autowired
+    PatientMapper patientMapper;
+    @Autowired
+    PatientService patientService;
 
     @GetMapping("/patient_info_add")
     public String patient_add(){
@@ -43,7 +56,25 @@ public class InfoController {
     public String deletePatient(@PathVariable("id") Long id,
                                 @RequestParam(value = "pn",defaultValue = "1")Integer pn,HttpSession session,
                                 RedirectAttributes ra){
+        Info info = infoService.getById(id);
+        String name = info.getName();
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        //通过QueryWrapper设置条件
+        //ge gt le lt
+        //查询age>=30的记录
+        //第一个参数是字段的名称 ， 第二个参数是设置的值
+        wrapper.eq("name" , name);
+        List<User> userlist = userMapper.selectList(wrapper);
+        User u = userlist.get(0);
         infoService.removeById(id);
+        id = u.getId();
+        userService.removeById(id);
+        QueryWrapper<Patient> pwrapper = new QueryWrapper<>();
+        wrapper.eq("name",name);
+        List<Patient> patients = patientMapper.selectList(pwrapper);
+        for(Patient patient : patients){
+            patientService.removeById(patient.getId());
+        }
 
         ra.addAttribute("pn",pn);
         return "redirect:/patient_info_table";
@@ -63,6 +94,12 @@ public class InfoController {
         info.setMedicalhistory(medicalhistory);
         info.setDiagnosis(diagnosis);
         infoMapper.insert(info);
+        User user = new User();
+        user.setName(name);
+        user.setPassword("123456");
+        user.setRole(-1);
+        userMapper.insert(user);
+
 
         return "main";
     }

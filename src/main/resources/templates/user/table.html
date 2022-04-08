@@ -63,7 +63,6 @@
                                 <table class="display table table-bordered table-striped" id="dynamic-table">
                                     <thead>
                                     <tr>
-                                        <th>id</th>
                                         <th>姓名</th>
                                         <th>密码</th>
                                         <th>权限</th>
@@ -72,10 +71,9 @@
                                     </thead>
                                     <tbody>
                                     <tr class="gradeX odd" th:each="user: ${users.records}">
-                                        <td th:text="${user.id}"></td>
                                         <td>[[${user.name}]]</td>
                                         <td th:text="${user.password}">Win 95+</td>
-                                        <td th:text="${user.role > 0?(user.role > 1? '超级管理员':'管理员'):'普通用户'}">4</td>
+                                        <td th:text="${user.role > -1?(user.role > 0?(user.role > 1? '超级管理员':'管理员'):'普通用户'):'病人用户'}">4</td>
                                         <td>
                                             <a th:href="@{/user/update/{id}(id=${user.id})}"
                                                class="btn btn-danger btn-sm" type="button">编辑</a>

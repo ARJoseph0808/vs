@@ -20,11 +20,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * @author Joseph
@@ -59,26 +65,29 @@ public class PatientController {
         String collectdatapath = "";
         String analysisdatapath = "";
         User u = (User) session.getAttribute("loginUser");
+        Date d = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String createdtime = sdf.format(d);
 
 
         if(!collectdata.isEmpty()){
             //保存至服务器或者磁盘
             String originalFilename1 = collectdata.getOriginalFilename();
-            collectdata.transferTo(new File(uploadpath+name+u.getName()+originalFilename1));
+            collectdata.transferTo(new File(uploadpath+name+createdtime+u.getName()+originalFilename1));
             //TxtToJson
             TxtToJson txtToJson = new TxtToJson();
-            collectdatapath = name+u.getName()+originalFilename1;
-            String path = uploadpath+name+u.getName()+originalFilename1;
+            collectdatapath = name+createdtime+u.getName()+originalFilename1;
+            String path = uploadpath+name+createdtime+u.getName()+originalFilename1;
             txtToJson.txtToJson(path);
         }
         if(!analysisdata.isEmpty()){
             //保存至服务器或者磁盘
             String originalFilename2 = analysisdata.getOriginalFilename();
-            analysisdata.transferTo(new File(uploadpath+name+u.getName()+originalFilename2));
+            analysisdata.transferTo(new File(uploadpath+name+createdtime+u.getName()+originalFilename2));
             //TxtToJson
             TxtToJson txtToJson = new TxtToJson();
-            analysisdatapath = name+u.getName()+originalFilename2;
-            String path = uploadpath+name+u.getName()+originalFilename2;
+            analysisdatapath = name+createdtime+u.getName()+originalFilename2;
+            String path = uploadpath+name+createdtime+u.getName()+originalFilename2;
             txtToJson.txtToJson(path);
         }
 
@@ -86,9 +95,7 @@ public class PatientController {
         patient.setName(name);
         patient.setAnalysisdatapath(analysisdatapath);
         patient.setCollectdatapath(collectdatapath);
-        Date d = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        patient.setCreatetime(sdf.format(d));
+        patient.setCreatetime(createdtime);
         patientMapper.insert(patient);
 
         Info info = (Info) session.getAttribute("info");
@@ -145,29 +152,33 @@ public class PatientController {
                          @RequestParam("analysisdatapath") String analysisdatapath, HttpSession session) throws IOException {
 
         User u = (User) session.getAttribute("loginUser");
+        Date d = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String createdtime = sdf.format(d);
 
         if(!collectdata.isEmpty()){
             //保存至服务器或者磁盘
             String originalFilename1 = collectdata.getOriginalFilename();
-            collectdata.transferTo(new File(uploadpath+name+u.getName()+originalFilename1));
-            collectdatapath = name+u.getName()+originalFilename1;
+            collectdata.transferTo(new File(uploadpath+name+createdtime+u.getName()+originalFilename1));
+            collectdatapath = name+createdtime+u.getName()+originalFilename1;
             TxtToJson txtToJson = new TxtToJson();
-            String path = uploadpath+name+u.getName()+originalFilename1;
+            String path = uploadpath+name+createdtime+u.getName()+originalFilename1;
             txtToJson.txtToJson(path);
         }
         if(!analysisdata.isEmpty()){
             //保存至服务器或者磁盘
             String originalFilename2 = analysisdata.getOriginalFilename();
-            analysisdata.transferTo(new File(uploadpath+name+u.getName()+originalFilename2));
-            analysisdatapath = name+u.getName()+originalFilename2;
+            analysisdata.transferTo(new File(uploadpath+name+createdtime+u.getName()+originalFilename2));
+            analysisdatapath = name+createdtime+u.getName()+originalFilename2;
             TxtToJson txtToJson = new TxtToJson();
-            String path = uploadpath+name+u.getName()+originalFilename2;
+            String path = uploadpath+name+createdtime+u.getName()+originalFilename2;
             txtToJson.txtToJson(path);
         }
 
         Patient patient = patientMapper.selectById(id);
         patient.setAnalysisdatapath(analysisdatapath);
         patient.setCollectdatapath(collectdatapath);
+        patient.setCreatetime(createdtime);
         patientMapper.updateById(patient);
 
         return "main";
@@ -197,5 +208,104 @@ public class PatientController {
 //        return "table/patient_table";
         return "patient/table";
     }
+
+    @GetMapping("/patient_adownload/{id}")
+    public void patient_adownload(@PathVariable("id") Long id, HttpSession session, Model model, HttpServletResponse response) throws UnsupportedEncodingException {
+        Info info = infoMapper.selectById(id);
+        String name = info.getName();
+        //构造分页参数
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("name",name);
+        List<Patient> lists = patientMapper.selectByMap(map);
+        Date d = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String createdtime = sdf.format(d);
+        String downloadfile = name + "分析数据" + createdtime + ".zip";
+        downloadfile = new String(downloadfile.getBytes(), "ISO-8859-1");
+        response.setContentType("multipart/form-data");//1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
+        response.setHeader("Content-Disposition", "attachment;fileName="+downloadfile);
+        FileInputStream instream = null;
+        try {
+            ZipOutputStream zipstream = new ZipOutputStream(response.getOutputStream());
+            for (Patient patient : lists) {
+                if(patient.getAnalysisdatapath() != null){
+                    String file = uploadpath + patient.getAnalysisdatapath();
+                    if (!new File(file).exists()) {
+                        continue;
+                    }
+                    instream = new FileInputStream(file);
+                    ZipEntry entry = new ZipEntry(patient.getAnalysisdatapath());
+                    zipstream.putNextEntry(entry);
+                    byte[] buffer = new byte[1024];
+                    int len = 0;
+                    while ((len = instream.read(buffer)) > 0){
+                        zipstream.write(buffer,0,len);
+                    }
+                    instream.close();
+                    zipstream.closeEntry();
+                    zipstream.flush();
+                }
+
+            }
+            zipstream.finish();
+            zipstream.close();
+        } catch (IOException e) {
+
+        }
+
+        return ;
+    }
+
+    @GetMapping("/patient_cdownload/{id}")
+    public void patient_cdownload(@PathVariable("id") Long id, HttpSession session, Model model, HttpServletResponse response) throws UnsupportedEncodingException {
+        Info info = infoMapper.selectById(id);
+        String name = info.getName();
+        //构造分页参数
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("name",name);
+        List<Patient> lists = patientMapper.selectByMap(map);
+        Date d = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String createdtime = sdf.format(d);
+        String downloadfile = name + "采集数据" +createdtime + ".zip";
+        downloadfile = new String(downloadfile.getBytes(), "ISO-8859-1");
+        response.setContentType("multipart/form-data");//1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
+        response.setHeader("Content-Disposition", "attachment;fileName="+downloadfile);
+        FileInputStream instream = null;
+        try {
+            ZipOutputStream zipstream=new ZipOutputStream(response.getOutputStream());
+            for (Patient patient : lists) {
+                if(patient.getCollectdatapath() != null){
+                    String file = uploadpath + patient.getCollectdatapath();
+                    if (!new File(file).exists()) {
+                        continue;
+                    }
+                    instream = new FileInputStream(file);
+                    ZipEntry entry = new ZipEntry(patient.getCollectdatapath());
+                    zipstream.putNextEntry(entry);
+                    byte[] buffer = new byte[1024];
+                    int len = 0;
+                    while ((len = instream.read(buffer)) > 0){
+                        zipstream.write(buffer,0,len);
+                    }
+                    instream.close();
+                    zipstream.closeEntry();
+                    zipstream.flush();
+                }
+
+            }
+            zipstream.finish();
+            zipstream.close();
+        } catch (IOException e) {
+
+        }
+
+        return ;
+    }
+
+
+
+
+
 
 }

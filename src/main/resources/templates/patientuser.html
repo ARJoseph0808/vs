@@ -7,7 +7,7 @@
     <meta name="author" content="ThemeBucket">
     <link rel="shortcut icon" href="#" type="image/png">
 
-    <title>病人列表</title>
+    <title>详情</title>
 
     <!--dynamic table-->
     <link href="js/advanced-datatable/css/demo_page.css" rel="stylesheet"/>
@@ -21,28 +21,74 @@
 
 <section>
     <!-- left side start-->
-    <div th:replace="common :: #leftmenu"></div>
+    <div id="leftmenu" class="left-side sticky-left-side">
+
+        <!--网站logo 大 和 小-->
+        <div class="logo">
+            <a th:href="@{/main.html}"><img src="/images/Logoo3.png" alt=""></a>
+        </div>
+
+        <!-- 隐藏侧边栏时显示logo -->
+        <div class="logo-icon text-center">
+            <a th:href="@{/main.html}"><img src="/images/logo_icon1.png" alt=""></a>
+        </div>
+        <!--网站logo 大 和 小-->
+
+        <div class="left-side-inner">
+
+
+
+            <!--侧边栏导航开始-->
+            <ul class="nav nav-pills nav-stacked custom-nav">
+                <li class="menu-list nav-active" th:each="role: ${session.loginUser.role}" th:class="${role == -1?'menu-list nav-active':'hidden'}"><a href="#"><i class="fa fa-th-list" ></i> <span>详情</span></a>
+                    <ul class="sub-menu-list">
+                        <li><a th:href="@{/patientuser.html}">详情</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <!--侧边栏导航结束-->
+
+        </div>
+    </div>
     <!-- left side end-->
 
     <!-- main content start-->
     <div class="main-content">
 
         <!-- header section start-->
-        <div th:replace="common :: headermenu"></div>
+        <div th:fragment="headermenu" class="header-section">
+
+            <!--开关按钮开始-->
+            <a class="toggle-btn"><i class="fa fa-bars"></i></a>
+            <!--开关按钮结束-->
+
+
+
+            <!--通知菜单开始 -->
+            <div class="menu-right">
+                <ul class="notification-menu">
+                    <li>
+                        <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            <!--                    <img src="images/photos/user-avatar.png" alt="" />-->
+                            [[${session.loginUser.name}]]
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-usermenu pull-right">
+                            <li><a th:href="@{/}"><i class="fa fa-sign-out"></i> 登出</a></li>
+                            <li><a th:href="@{/user/changepassword/{id}(id=${session.loginUser.id})}"><i class="fa fa-sign-out"></i>修改密码</a></li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </div>
+            <!--通知菜单结束 -->
+
+        </div>
         <!-- header section end-->
 
         <!-- page heading start-->
-        <div class="page-heading">
-            <h3>
-                病人列表
-            </h3>
-            <ul class="breadcrumb">
-                <li>
-                    <a href="#">病人管理</a>
-                </li>
-                <li class="active"> 病人详情</li>
-            </ul>
-        </div>
+
         <!-- page heading end-->
         <div class="wrapper">
             <div class="row">
@@ -50,10 +96,10 @@
                     <div class="panel">
                         <div class="panel-body">
                             <div class="profile-desk">
-                                <h2 th:text="|病人姓名:${session.info.name}|"></h2>
-                                <span class="designation" th:text="|性别:${session.info.sex == 0?'女':'男'} 年龄:${session.info.age}|"></span>
-                                <p th:text="|过往病史:${session.info.getMedicalhistory()}|"></p>
-                                <p th:text="|诊断结果:${session.info.getDiagnosis()}|"></p>
+                                <h2 th:text="|病人姓名:${session.patientuser.name}|"></h2>
+                                <span class="designation" th:text="|性别:${session.patientuser.sex == 0?'女':'男'} 年龄:${session.patientuser.age}|"></span>
+                                <p th:text="|过往病史:${session.patientuser.getMedicalhistory()}|"></p>
+                                <p th:text="|诊断结果:${session.patientuser.getDiagnosis()}|"></p>
 
                             </div>
                         </div>
@@ -62,7 +108,6 @@
             </div>
         </div>
 
-        <!--body wrapper start-->
         <div class="wrapper">
             <div class="row">
                 <div class="col-sm-12">
@@ -73,13 +118,7 @@
                 <a href="javascript:;" class="fa fa-times"></a>
              </span>
                         </header>
-                        <div class="panel-body" >
-                            <h2 th:each="role: ${session.loginUser.role}" th:class="${role > -1?'':'hidden'}">
-                                <a class="btn btn-sm btn-success" th:href="@{/patient_add}">添加检测</a>
-                                <a class="btn btn-sm btn-success" th:href="@{/patient_info/update/{id}(id=${session.info.id})}">修改诊断</a>
-                                <a class="btn btn-sm btn-success" th:href="@{/patient_cdownload/{id}(id=${session.info.id})}">导出采集数据</a>
-                                <a class="btn btn-sm btn-success" th:href="@{/patient_adownload/{id}(id=${session.info.id})}">导出分析数据</a>
-                            </h2>
+                        <div class="panel-body">
                             <div class="adv-table">
                                 <table class="display table table-bordered table-striped" id="dynamic-table">
                                     <thead>
@@ -91,15 +130,11 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr class="gradeX odd" th:each="patient: ${patients.records}">
+                                    <tr class="gradeX odd" th:each="patient : ${patients.getRecords()}">
                                         <td><a th:href="@{/txt/{path}(path=${patient.collectdatapath})}" th:download="${patient.collectdatapath}">[[${patient.collectdatapath}]]</a></td>
                                         <td><a th:href="@{/txt/{path}(path=${patient.analysisdatapath})}" th:download="${patient.analysisdatapath}">[[${patient.analysisdatapath}]]</a></td>
                                         <td th:text="${patient.createtime}">Win 95+</td>
                                         <td>
-                                            <a th:href="@{/patient/update/{id}(id=${patient.id})}" th:each="role: ${session.loginUser.role}" th:class="${role > -1?'btn btn-danger btn-sm':'hidden'}"
-                                               class="btn btn-danger btn-sm" type="button">编辑</a>
-                                            <a th:href="@{/patient/delete/{id}(id=${patient.id})}" th:each="role: ${session.loginUser.role}" th:class="${role > -1?'btn btn-danger btn-sm':'hidden'}"
-                                               class="btn btn-danger btn-sm" type="button">删除</a>
                                             <a th:href="@{/patient/echarts/{id}(id=${patient.id})}"
                                                class="btn btn-danger btn-sm" type="button">可视化</a>
                                         </td>
@@ -136,18 +171,9 @@
                     </section>
                 </div>
             </div>
-
-            <!--body wrapper end-->
-
-            <!--footer section start-->
-            <footer>
-                2021 &copy; VisualizationSystem by Joseph
-            </footer>
-            <!--footer section end-->
+    </div>
 
 
-        </div>
-        <!-- main content end-->
 </section>
 
 <!-- Placed js at the end of the document so the pages load faster -->

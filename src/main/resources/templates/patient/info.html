@@ -84,11 +84,11 @@
                                         <td th:text="${info.age}">Win 95+</td>
                                         <td th:text="${info.sex == 0?'女':'男'}">4</td>
                                         <td>
-                                            <a th:href="@{/patient_info/update/{id}(id=${info.id})}" th:each="role: ${session.loginUser.role}" th:class="${role > 0?'btn btn-danger btn-sm':'hidden'}"
+                                            <a th:href="@{/patient_info/update/{id}(id=${info.id})}"
                                                class="btn btn-danger btn-sm" type="button">编辑</a>
-                                            <a th:href="@{/patient_table(id=${info.id})}" th:each="role: ${session.loginUser.role}" th:class="${role > 0?'btn btn-danger btn-sm':'hidden'}"
+                                            <a th:href="@{/patient_table(id=${info.id})}"
                                                class="btn btn-danger btn-sm" type="button">详情</a>
-                                            <a th:href="@{/patient_info_delete/{id}(id=${info.id})}"
+                                            <a th:href="@{/patient_info_delete/{id}(id=${info.id})}" th:each="role: ${session.loginUser.role}" th:class="${role > 0?'btn btn-danger btn-sm':'hidden'}"
                                                class="btn btn-danger btn-sm" type="button">删除</a>
                                         </td>
                                     </tr>

@@ -45,7 +45,12 @@
 <!--                    <li><a th:href="@{/patient_table}">病人列表</a> </li>-->
 <!--                </ul>-->
 <!--            </li>-->
-            <li class="menu-list nav-active"><a href="#"><i class="fa fa-th-list"></i> <span>病人管理</span></a>
+            <li class="menu-list nav-active" th:each="role: ${session.loginUser.role}" th:class="${role == -1?'menu-list nav-active':'hidden'}"><a href="#"><i class="fa fa-th-list" ></i> <span>详情</span></a>
+                <ul class="sub-menu-list">
+                    <li><a th:href="@{/patientuser.html}">详情</a></li>
+                </ul>
+            </li>
+            <li class="menu-list nav-active" th:each="role: ${session.loginUser.role}" th:class="${role > -1?'menu-list nav-active':'hidden'}"><a href="#"><i class="fa fa-th-list" ></i> <span>病人管理</span></a>
                 <ul class="sub-menu-list">
                     <li><a th:href="@{/patient_info_add}">新增病人</a></li>
                     <li><a th:href="@{/patient_info_table}">病人列表</a> </li>
@@ -55,9 +60,9 @@
                 <ul class="sub-menu-list">
                     <li><a th:href="@{/user_add}">新增用户</a></li>
                     <li><a th:href="@{/user_table}">用户列表</a> </li>
+                    <li><a th:href="@{/patientuser_table}">病人用户列表</a> </li>
                 </ul>
             </li>
-
 
 
         </ul>

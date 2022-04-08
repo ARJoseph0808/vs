@@ -44,12 +44,32 @@ public class TxtToJson {
                 wave.setValue(Double.parseDouble(str));
                 tlist.add(wave);
             }
-            else if(str.charAt(str.length()-3) != '-'){
+            else if(str.charAt(str.length()-3) == '-'){
+                Wave wave = new Wave();
+                wave.setTimes(i++);
+                wave.setValue(0f);
+                tlist.add(wave);
+            }else{
                 Wave wave = new Wave();
                 wave.setTimes(i++);
                 wave.setValue(Double.parseDouble(str));
                 tlist.add(wave);
             }
+
+
+//            if (str.length() < 3){
+//                Wave wave = new Wave();
+//                wave.setTimes(i++);
+//                wave.setValue(Double.parseDouble(str));
+//                tlist.add(wave);
+//            }
+//            else if(str.charAt(str.length()-3) != '-'){
+//                Wave wave = new Wave();
+//                wave.setTimes(i++);
+//                wave.setValue(Double.parseDouble(str));
+//                tlist.add(wave);
+//            }
+
         }
         //JSON.toJSONString()方法：将对象数组（JSON格式的字符串也可以）转换成JSON数据。
         // 输出结果[{"times":0,"value":4.03822E-4},{"times":1,"value":0.00201702}]

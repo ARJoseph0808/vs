@@ -1,7 +1,13 @@
 package com.bishe.visualizationsystem.admin.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bishe.visualizationsystem.admin.bean.Info;
+import com.bishe.visualizationsystem.admin.bean.Patient;
 import com.bishe.visualizationsystem.admin.bean.User;
+import com.bishe.visualizationsystem.admin.mapper.InfoMapper;
 import com.bishe.visualizationsystem.admin.mapper.UserMapper;
+import com.bishe.visualizationsystem.admin.service.PatientService;
 import com.google.code.kaptcha.Producer;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +42,12 @@ public class IndexController {
     @Autowired
     private Producer kaptchaProducer;
 
+    @Autowired
+    InfoMapper infoMapper;
+
+    @Autowired
+    PatientService patientService;
+
     /**
      * 来登录页
      * @return
@@ -68,9 +80,25 @@ public class IndexController {
             User u = users.get(0);
             if(u.getPassword().equals(user.getPassword())){
                 session.setAttribute("loginUser",u);
+                if(u.getRole() == -1){
+                    QueryWrapper<Info> wrapper = new QueryWrapper<>();
+                    //通过QueryWrapper设置条件
+                    //ge gt le lt
+                    //查询age>=30的记录
+                    //第一个参数是字段的名称 ， 第二个参数是设置的值
+                    wrapper.eq("name" , u.getName());
+                    List<Info> infolist = infoMapper.selectList(wrapper);
+                    Info info = infolist.get(0);
+                    session.setAttribute("patientuser",info);
 
-                //登陆成功 重定向到main.html 重定向防止表单重复提交
-                return "redirect:/main.html";
+                    return "redirect:/patientuser.html";
+//                    return "patientuser";
+                }else{
+                    //登陆成功 重定向到main.html 重定向防止表单重复提交
+                    return "redirect:/main.html";
+                }
+                /*//登陆成功 重定向到main.html 重定向防止表单重复提交
+                return "redirect:/main.html";*/
             }else{
                 model.addAttribute("msg", "密码错误");
                 //回到登录页
@@ -101,6 +129,35 @@ public class IndexController {
         } catch (IOException e) {
 //            logger.error("响应验证码失败:" + e.getMessage());
         }
+    }
+
+    /**
+     * 去patientuser页面
+     * @return
+     */
+    @GetMapping("/patientuser.html")
+    public String patientuserPage(HttpSession session, Model model){
+
+        Info info = (Info) session.getAttribute("patientuser");
+        String name = info.getName();
+        //构造分页参数
+        Page<Patient> ppage = new Page<>(1,2);
+        QueryWrapper<Patient> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like(true, "name", name);
+        //调用page进行分页
+        Page<Patient> patientPage = patientService.page(ppage,queryWrapper);
+
+
+        patientPage.getRecords();
+        patientPage.getCurrent();
+        patientPage.getPages();
+        patientPage.getTotal();
+
+
+        session.setAttribute("info",info);
+        model.addAttribute("patients",patientPage);
+
+        return "patientuser";
     }
 
     /**
